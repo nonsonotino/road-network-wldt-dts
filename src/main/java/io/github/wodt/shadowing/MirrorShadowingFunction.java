@@ -161,6 +161,5 @@ public class MirrorShadowingFunction extends ShadowingFunction {
         } catch (EventBusException e) {
             e.printStackTrace();
         }
-
     }
 }
