@@ -21,4 +21,9 @@ repositories {
 
 dependencies {
     implementation("io.github.webbasedwodt:wldt-wodt-adapter:5.2.1")
+    implementation("io.github.wldt:mqtt-physical-adapter:0.1.2")
+}
+
+application {
+    mainClass.set("io.github.wodt.Laucher")
 }
