@@ -9,7 +9,9 @@ import it.wldt.adapter.physical.event.PhysicalAssetRelationshipInstanceDeletedWl
 import it.wldt.core.model.ShadowingFunction;
 import it.wldt.core.state.DigitalTwinStateAction;
 import it.wldt.core.state.DigitalTwinStateEvent;
+import it.wldt.core.state.DigitalTwinStateEventNotification;
 import it.wldt.core.state.DigitalTwinStateProperty;
+import it.wldt.exception.EventBusException;
 
 import java.util.Map;
 
@@ -46,7 +48,7 @@ public class MirrorShadowingFunction extends ShadowingFunction {
                 //Iterate all Properties.
                 pad.getProperties().forEach(property->{
                     try {
-                        //Create and Write new property on the DT's state.
+                        //Create and Write new property on the DT state.
                         this.digitalTwinStateManager.createProperty(new DigitalTwinStateProperty<>(property.getKey(), property.getInitialValue()));
 
                         //Start observing property.
@@ -111,12 +113,34 @@ public class MirrorShadowingFunction extends ShadowingFunction {
 
     @Override
     protected void onPhysicalAssetPropertyVariation(PhysicalAssetPropertyWldtEvent<?> physicalPropertyEventMessage) {
+        try {
+            //Start State transaction.
+            this.digitalTwinStateManager.startStateTransaction();
 
+            //Update DT property.
+            this.digitalTwinStateManager.updateProperty(new DigitalTwinStateProperty<>(
+                    physicalPropertyEventMessage.getPhysicalPropertyId(),
+                    physicalPropertyEventMessage.getBody()));
+
+            //Commit State changes.
+            this.digitalTwinStateManager.commitStateTransaction();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected void onPhysicalAssetEventNotification(PhysicalAssetEventWldtEvent<?> physicalAssetEventWldtEvent) {
-
+        try {
+            //Notify the DT components of Event.
+            this.digitalTwinStateManager.notifyDigitalTwinStateEvent(new DigitalTwinStateEventNotification<>(
+                    physicalAssetEventWldtEvent.getPhysicalEventKey(),
+                    physicalAssetEventWldtEvent.getBody(),
+                    physicalAssetEventWldtEvent.getCreationTimestamp()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -131,6 +155,12 @@ public class MirrorShadowingFunction extends ShadowingFunction {
 
     @Override
     protected void onDigitalActionEvent(DigitalActionWldtEvent<?> digitalActionWldtEvent) {
+        try {
+            //Forward of the action to the Physical Adapter.
+            this.publishPhysicalAssetActionWldtEvent(digitalActionWldtEvent.getActionKey(),digitalActionWldtEvent.getBody());
+        } catch (EventBusException e) {
+            e.printStackTrace();
+        }
 
     }
 }
