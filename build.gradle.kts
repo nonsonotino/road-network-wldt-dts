@@ -2,7 +2,7 @@ plugins {
     application
 }
 
-val ghPackageUsername: String by project
+val ghPackagesUsername: String by project
 val ghPackagesPwd: String by project
 
 repositories {
@@ -13,7 +13,7 @@ repositories {
     maven {
         url = uri("https://maven.pkg.github.com/Web-of-Digital-Twins/wldt-wodt-adapter")
         credentials {
-            username = project.findProperty("ghPackagesUsername")?.toString() ?: ghPackageUsername
+            username = project.findProperty("ghPackagesUsername")?.toString() ?: ghPackagesUsername
             password = project.findProperty("ghPackagesPwd")?.toString() ?: ghPackagesPwd
         }
     }
