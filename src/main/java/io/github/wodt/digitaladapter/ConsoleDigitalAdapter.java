@@ -19,7 +19,7 @@ public class ConsoleDigitalAdapter extends DigitalAdapter {
 
     @Override
     protected void onEventNotificationReceived(DigitalTwinStateEventNotification digitalTwinStateEventNotification) {
-
+        System.out.println("Event: " + digitalTwinStateEventNotification.getBody());
     }
 
     @Override
