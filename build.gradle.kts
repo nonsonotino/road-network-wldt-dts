@@ -23,6 +23,7 @@ dependencies {
     implementation("io.github.webbasedwodt:wldt-wodt-adapter:5.2.1")
     implementation("io.github.wldt:mqtt-physical-adapter:0.1.2")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.17.0")
+    implementation("io.github.webbasedwodt:wldt-wodt-adapter:<version>")
 }
 
 application {
