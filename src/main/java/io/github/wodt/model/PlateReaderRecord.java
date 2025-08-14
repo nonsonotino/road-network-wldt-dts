@@ -38,7 +38,7 @@ public class PlateReaderRecord {
             JsonNode root = mapper.readTree(jsonString);
             String plateNumber = root.get("licencePlate").asText();
             Date timestamp = DATE_FORMAT.parse(root.get("timestamp").asText());
-
+            System.out.println("plate: " + plateNumber + ",timestamp: " + timestamp);
             return new PlateReaderRecord(plateNumber, timestamp);
         } catch (Exception e) {
             e.printStackTrace();
