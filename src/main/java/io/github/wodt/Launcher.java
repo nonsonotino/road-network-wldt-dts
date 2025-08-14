@@ -91,9 +91,36 @@ public final class Launcher {
                     )
             );
             */
-            ConsoleDigitalAdapter car1DigitalAdapter = new ConsoleDigitalAdapter("car1-da");
-            ConsoleDigitalAdapter car2DigitalAdapter = new ConsoleDigitalAdapter("car2-da");
-            ConsoleDigitalAdapter car3DigitalAdapter = new ConsoleDigitalAdapter("car3-da");
+            WoDTDigitalAdapter car1DigitalAdapter = new WoDTDigitalAdapter(
+                    "car1-da",
+                    new WoDTDigitalAdapterConfiguration(
+                            URI.create("http://localhost:57382"),
+                            new DTVersion(1,0,0),
+                            new CarSemantics(),
+                            57382,
+                            "ABC123",
+                            Set.of(URI.create("http://localhost:57381"))
+                    ));
+            WoDTDigitalAdapter car2DigitalAdapter = new WoDTDigitalAdapter(
+                    "car2-da",
+                    new WoDTDigitalAdapterConfiguration(
+                            URI.create("http://localhost:57383"),
+                            new DTVersion(1,0,0),
+                            new CarSemantics(),
+                            57383,
+                            "ABC124",
+                            Set.of(URI.create("http://localhost:57381"))
+                    ));
+            WoDTDigitalAdapter car3DigitalAdapter = new WoDTDigitalAdapter(
+                    "car3-da",
+                    new WoDTDigitalAdapterConfiguration(
+                            URI.create("http://localhost:57384"),
+                            new DTVersion(1,0,0),
+                            new CarSemantics(),
+                            57384,
+                            "ABC125",
+                            Set.of(URI.create("http://localhost:57381"))
+                    ));
             ConsoleDigitalAdapter prDigitalAdapter = new ConsoleDigitalAdapter("pr-da");
 
             //DT mqtt physical adapter.
