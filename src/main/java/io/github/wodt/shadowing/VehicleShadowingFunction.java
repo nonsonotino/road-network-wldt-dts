@@ -1,21 +1,27 @@
 package io.github.wodt.shadowing;
 
+import io.github.wodt.digitaladapter.CityPhysicalAdapter;
+import io.github.wodt.model.PlateReaderRecord;
 import it.wldt.adapter.digital.event.DigitalActionWldtEvent;
+import it.wldt.adapter.mqtt.physical.MqttPhysicalAdapter;
 import it.wldt.adapter.physical.PhysicalAssetDescription;
+import it.wldt.adapter.physical.PhysicalAssetRelationship;
+import it.wldt.adapter.physical.PhysicalAssetRelationshipInstance;
 import it.wldt.adapter.physical.event.PhysicalAssetEventWldtEvent;
 import it.wldt.adapter.physical.event.PhysicalAssetPropertyWldtEvent;
 import it.wldt.adapter.physical.event.PhysicalAssetRelationshipInstanceCreatedWldtEvent;
 import it.wldt.adapter.physical.event.PhysicalAssetRelationshipInstanceDeletedWldtEvent;
 import it.wldt.core.model.ShadowingFunction;
-import it.wldt.core.state.DigitalTwinStateAction;
-import it.wldt.core.state.DigitalTwinStateEvent;
-import it.wldt.core.state.DigitalTwinStateEventNotification;
-import it.wldt.core.state.DigitalTwinStateProperty;
+import it.wldt.core.state.*;
 import it.wldt.exception.EventBusException;
+import it.wldt.exception.WldtDigitalTwinStateException;
 
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class MirrorShadowingFunction extends ShadowingFunction {
+
+    private PhysicalAssetRelationship<String> detected = new PhysicalAssetRelationship<>("vehicle-detection", "detection");
 
     public MirrorShadowingFunction(String id) {
         super(id);
@@ -86,6 +92,21 @@ public class MirrorShadowingFunction extends ShadowingFunction {
                         e.printStackTrace();
                     }
                 });
+
+                //Iterate over Physical Relationships
+                pad.getRelationships().forEach(relationship -> {
+                    try{
+                        if(relationship != null && relationship.getName().equals("vehicle-detection")){
+                            DigitalTwinStateRelationship<String> insideInDtStateRelationship = new DigitalTwinStateRelationship<>(relationship.getName(), relationship.getName());
+                            this.digitalTwinStateManager.createRelationship(insideInDtStateRelationship);
+                            observePhysicalAssetRelationship(relationship);
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                });
+
+
             });
 
             //Commit state changes.
@@ -96,7 +117,11 @@ public class MirrorShadowingFunction extends ShadowingFunction {
 
             //Notify DT core that the binding has been completed.
             notifyShadowingSync();
-        } catch (Exception e) {
+        }
+        catch (WldtDigitalTwinStateException e){
+            e.printStackTrace();
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -116,6 +141,8 @@ public class MirrorShadowingFunction extends ShadowingFunction {
         try {
             //Start State transaction.
             this.digitalTwinStateManager.startStateTransaction();
+
+            System.out.println("CAMBIO COORDS " + physicalPropertyEventMessage.getBody());
 
             //Update DT property.
             this.digitalTwinStateManager.updateProperty(new DigitalTwinStateProperty<>(
@@ -138,6 +165,7 @@ public class MirrorShadowingFunction extends ShadowingFunction {
                     physicalAssetEventWldtEvent.getPhysicalEventKey(),
                     physicalAssetEventWldtEvent.getBody(),
                     physicalAssetEventWldtEvent.getCreationTimestamp()));
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -145,7 +173,29 @@ public class MirrorShadowingFunction extends ShadowingFunction {
 
     @Override
     protected void onPhysicalAssetRelationshipEstablished(PhysicalAssetRelationshipInstanceCreatedWldtEvent<?> physicalAssetRelationshipWldtEvent) {
+        try {
+            System.out.println("CIAOOOO");
+            if (physicalAssetRelationshipWldtEvent != null
+                    && physicalAssetRelationshipWldtEvent.getBody() != null) {
+                final PhysicalAssetRelationshipInstance<?> paRelInstance =
+                        physicalAssetRelationshipWldtEvent.getBody();
 
+                if (paRelInstance.getTargetId() instanceof String) {
+                    final String relName = paRelInstance.getRelationship().getName();
+                    final String relKey = paRelInstance.getKey();
+                    final String relTargetId = (String) paRelInstance.getTargetId();
+
+                    final DigitalTwinStateRelationshipInstance<String> instance =
+                            new DigitalTwinStateRelationshipInstance<>(relName, relTargetId, relKey);
+
+                    this.digitalTwinStateManager.startStateTransaction();
+                    this.digitalTwinStateManager.addRelationshipInstance(instance);
+                    this.digitalTwinStateManager.commitStateTransaction();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
