@@ -138,8 +138,6 @@ public class VehicleShadowingFunction extends ShadowingFunction {
             //Start State transaction.
             this.digitalTwinStateManager.startStateTransaction();
 
-            System.out.println("CAMBIO COORDS " + physicalPropertyEventMessage.getBody());
-
             //Update DT property.
             this.digitalTwinStateManager.updateProperty(new DigitalTwinStateProperty<>(
                     physicalPropertyEventMessage.getPhysicalPropertyId(),
@@ -169,29 +167,7 @@ public class VehicleShadowingFunction extends ShadowingFunction {
 
     @Override
     protected void onPhysicalAssetRelationshipEstablished(PhysicalAssetRelationshipInstanceCreatedWldtEvent<?> physicalAssetRelationshipWldtEvent) {
-        try {
-            System.out.println("CIAOOOO");
-            if (physicalAssetRelationshipWldtEvent != null
-                    && physicalAssetRelationshipWldtEvent.getBody() != null) {
-                final PhysicalAssetRelationshipInstance<?> paRelInstance =
-                        physicalAssetRelationshipWldtEvent.getBody();
-
-                if (paRelInstance.getTargetId() instanceof String) {
-                    final String relName = paRelInstance.getRelationship().getName();
-                    final String relKey = paRelInstance.getKey();
-                    final String relTargetId = (String) paRelInstance.getTargetId();
-
-                    final DigitalTwinStateRelationshipInstance<String> instance =
-                            new DigitalTwinStateRelationshipInstance<>(relName, relTargetId, relKey);
-
-                    this.digitalTwinStateManager.startStateTransaction();
-                    this.digitalTwinStateManager.addRelationshipInstance(instance);
-                    this.digitalTwinStateManager.commitStateTransaction();
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        
     }
 
     @Override
