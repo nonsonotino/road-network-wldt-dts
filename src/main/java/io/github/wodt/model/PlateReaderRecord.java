@@ -28,6 +28,14 @@ public class PlateReaderRecord {
     }
 
     /**
+     * Return car detected.
+     * @return Car ID
+     */
+    public String getCarID() {
+        return carID;
+    }
+
+    /**
      * Extract record from given JSON string.
      * @param jsonString JSON string.
      * @return Plate reader event.
