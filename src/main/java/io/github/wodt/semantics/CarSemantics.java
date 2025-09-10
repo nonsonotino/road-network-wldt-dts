@@ -21,12 +21,11 @@ public class CarSemantics implements DigitalTwinSemantics {
 
     @Override
     public List<RdfClass> getDigitalTwinTypes() {
-        return List.of(new RdfClass(URI.create("http://www.example.org/ontology#CarLocation")));
+        return List.of(new RdfClass(URI.create("http://www.example.org/ontology#Car")));
     }
 
     @Override
     public Optional<RdfUriResource> getDomainTag(DigitalTwinStateProperty<?> property) {
-
         return getOptionalFromMap(PROPERTIES_DOMAIN_TAG, property.getKey());
     }
 
@@ -42,7 +41,6 @@ public class CarSemantics implements DigitalTwinSemantics {
 
     @Override
     public Optional<List<RdfUnSubjectedTriple>> mapData(DigitalTwinStateProperty<?> property) {
-
         if ("position".equals(property.getKey())) {
             return Optional.of(List.of(
                     new RdfUnSubjectedTriple(
