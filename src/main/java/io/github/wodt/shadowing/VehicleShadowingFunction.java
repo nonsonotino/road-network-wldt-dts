@@ -1,9 +1,6 @@
 package io.github.wodt.shadowing;
 
-import io.github.wodt.digitaladapter.CityPhysicalAdapter;
-import io.github.wodt.model.PlateReaderRecord;
 import it.wldt.adapter.digital.event.DigitalActionWldtEvent;
-import it.wldt.adapter.mqtt.physical.MqttPhysicalAdapter;
 import it.wldt.adapter.physical.PhysicalAssetDescription;
 import it.wldt.adapter.physical.PhysicalAssetRelationship;
 import it.wldt.adapter.physical.PhysicalAssetRelationshipInstance;
@@ -17,13 +14,12 @@ import it.wldt.exception.EventBusException;
 import it.wldt.exception.WldtDigitalTwinStateException;
 
 import java.util.Map;
-import java.util.logging.Logger;
 
-public class MirrorShadowingFunction extends ShadowingFunction {
+public class VehicleShadowingFunction extends ShadowingFunction {
 
     private PhysicalAssetRelationship<String> detected = new PhysicalAssetRelationship<>("vehicle-detection", "detection");
 
-    public MirrorShadowingFunction(String id) {
+    public VehicleShadowingFunction(String id) {
         super(id);
     }
 
