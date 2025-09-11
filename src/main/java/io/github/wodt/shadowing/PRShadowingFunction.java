@@ -272,19 +272,4 @@ public class PRShadowingFunction extends ShadowingFunction {
     protected void onDigitalActionEvent(DigitalActionWldtEvent<?> digitalActionWldtEvent) {
 
     }
-
-    /**
-     * Get JSON node from given JSON string.
-     * @param jsonString JSON string.
-     * @return JSON node.
-     */
-    private JsonNode getJsonNodeFromString(String jsonString) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readTree(jsonString);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 }
