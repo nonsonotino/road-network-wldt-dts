@@ -3,7 +3,6 @@ package io.github.wodt.shadowing;
 import it.wldt.adapter.digital.event.DigitalActionWldtEvent;
 import it.wldt.adapter.physical.PhysicalAssetDescription;
 import it.wldt.adapter.physical.PhysicalAssetRelationship;
-import it.wldt.adapter.physical.PhysicalAssetRelationshipInstance;
 import it.wldt.adapter.physical.event.PhysicalAssetEventWldtEvent;
 import it.wldt.adapter.physical.event.PhysicalAssetPropertyWldtEvent;
 import it.wldt.adapter.physical.event.PhysicalAssetRelationshipInstanceCreatedWldtEvent;
@@ -167,7 +166,6 @@ public class VehicleShadowingFunction extends ShadowingFunction {
 
     @Override
     protected void onPhysicalAssetRelationshipEstablished(PhysicalAssetRelationshipInstanceCreatedWldtEvent<?> physicalAssetRelationshipWldtEvent) {
-        
     }
 
     @Override
