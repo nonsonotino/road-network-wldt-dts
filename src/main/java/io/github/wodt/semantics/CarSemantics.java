@@ -21,7 +21,7 @@ public class CarSemantics implements DigitalTwinSemantics {
 
     @Override
     public List<RdfClass> getDigitalTwinTypes() {
-        return List.of(new RdfClass(URI.create("http://www.example.org/ontology#Car")));
+        return List.of(new RdfClass(URI.create("http://www.example.org/ontology#Car")), new RdfClass(URI.create("http://www.example.org/ontology#Vehicle")));
     }
 
     @Override
